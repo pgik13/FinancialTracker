@@ -19,12 +19,15 @@ func main() {
 	database.ConnectDB()
 
 	userRepo := &repo.UserRepo{}
+	transactionRepo := &repo.TransactionRepo{}
 
 	userService := &services.UserServices{Repo: *userRepo}
+	transactionService := &services.TransactionService{Repo: *transactionRepo}
 
 	userHandler := &handler.UserHandler{Service: userService}
+	transactionHandler := &handler.TransactionHandler{Service: transactionService}
 
-	router := routes.SetupRouter(userHandler)
+	router := routes.SetupRouter(userHandler, transactionHandler)
 
 	fmt.Println("Server running on " + os.Getenv("DB_HOST"))
 	http.ListenAndServe(":3040", router)
